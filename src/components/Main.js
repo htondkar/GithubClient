@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import GitHubClient from '../libs/GitHubClient.js'
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import SideMenu from './SideMenu.js';
@@ -11,7 +10,7 @@ class Main extends React.Component {
     return (
       <div className="container" id="wrapper">
         <SideMenu />
-        {React.cloneElement(this.props.children, Object.assign({}, GitHubClient, this.props))}
+        {React.cloneElement(this.props.children, this.props)}
       </div>
     );
   }

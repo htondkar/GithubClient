@@ -9,8 +9,11 @@ export default class LogIn extends React.Component {
     this.logInHandler = this.logInHandler.bind(this);
   }
 
-  logInHandler(username, password) {
-    this.props.action.logIn(username, password);
+  logInHandler(event) {
+    event.preventDefault();
+    const username = this.refs.username.value;
+    const password = this.refs.password.value;
+    this.props.actions.logIn(username, password)
   }
 
   render() {
@@ -19,7 +22,7 @@ export default class LogIn extends React.Component {
       <div className="card card-container">
           <img id="profile-img" className="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
           <p id="profile-name" className="profile-name-card"></p>
-          <form className="form-signin" ref="form">
+          <form className="form-signin">
               <span id="reauth-email" className="reauth-email"></span>
               <input ref="username" type="text" id="inputEmail" className="form-control" placeholder="Github Username" required autoFocus/>
               <input ref="password" type="password" id="inputPassword" className="form-control" placeholder="Password" required/>
@@ -29,7 +32,7 @@ export default class LogIn extends React.Component {
                       Remember me
                   </label>
               </div> */}
-              <button onClick={()=>this.logInHandler()}className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+              <button onClick={this.logInHandler} className="btn btn-lg btn-primary btn-block btn-signin">Sign in</button>
           </form>
           {/* <a href="#" className="forgot-password">
               Forgot the password?
