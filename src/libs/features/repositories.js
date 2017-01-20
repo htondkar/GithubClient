@@ -34,6 +34,17 @@ function fetchUserRepositories({handle}) {
 }
 
 /*
+## Search repositories
+*/
+
+function searchRepositories({handle}) {
+  return this.getData({path:`/search/repositories?q=${handle}`})
+    .then(response => {
+      return response.data;
+    });
+}
+
+/*
 ## fetchOrganizationRepositories
 
 - parameter: `organization` (organization name)
@@ -154,5 +165,6 @@ module.exports = {
   createPublicRepository: createPublicRepository,
   createPrivateRepository: createPrivateRepository,
   createPublicOrganizationRepository: createPublicOrganizationRepository,
-  createPrivateOrganizationRepository: createPrivateOrganizationRepository
+  createPrivateOrganizationRepository: createPrivateOrganizationRepository,
+  searchRepositories: searchRepositories
 };

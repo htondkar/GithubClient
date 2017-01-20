@@ -1,24 +1,17 @@
 import React, {PropTypes} from 'react';
-import $ from "jquery";
-// import {bindActionCreators} from 'redux';
-// import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 // import SideMenu from './SideMenu.js';
-// import * as actions from '../actions/actionCreators.js';
-import {browserHistory} from 'react-router';
+import * as actions from '../actions/actionCreators.js';
 
 
-export default class LogIn extends React.Component {
+class LogIn extends React.Component {
   constructor (props) {
     super();
     this.state = {
       ajaxCallInProgress: false
     }
     this.logInHandler = this.logInHandler.bind(this);
-    this.redirectToDashboard = this.redirectToDashboard.bind(this);
-  }
-
-  redirectToDashboard(){
-     browserHistory.push(`/dashboard/${this.props.authentication.username}`)
   }
 
   logInHandler(event) {
@@ -26,7 +19,8 @@ export default class LogIn extends React.Component {
     this.setState({ajaxCallInProgress: true})
     const username = this.refs.username.value;
     const password = this.refs.password.value;
-    this.props.actions.logIn(username, password)
+    this.props.actions.logIn(username, password);
+    
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -72,4 +66,21 @@ export default class LogIn extends React.Component {
   </div>
     );
   }
+
+
 }
+
+//connect the component to redux store
+function mapStateToProps(state) {
+  return{
+    userData: state.user.userData
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LogIn);

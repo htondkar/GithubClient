@@ -1,12 +1,15 @@
 
 import * as actionTypes from './actionTypes';
 import GitHubClient from '../libs/GitHubClient.js'
+import repositories from '../libs/features/repositories.js'
+import users from '../libs/features/users.js'
 import {token} from '../gitConfig.js';
+import {browserHistory} from 'react-router';
 
-let githubCliEnterprise = new GitHubClient({
+let github = new GitHubClient({
   baseUri: "https://api.github.com",
   token: token
-});
+}, repositories, users);
 
 function beginAjaxCall(task) {
   return {
@@ -15,23 +18,59 @@ function beginAjaxCall(task) {
   };
 }
 
+
+function redirectToDashboard(username){
+   browserHistory.push(`/dashboard/${username}`)
+}
+
+function redirectToSearchResults(query){
+   browserHistory.push(`/search/${query}`)
+}
+
 //Log in action creator
-function successfulLogIn(userData) {
-  console.log(userData);
+function successfulLogIn(userData, username) {
   return {
     type: actionTypes.LOG_IN_SUCCESS,
-    userData
+    userData,
+    username
   };
 }
+
+function searchSuccess(results) {
+  return {
+    type: actionTypes.SEARCH_RESULT_SUCCESS,
+    results,
+  };
+}
+
 
 //Log in - redux thunk
 export function logIn(username, password) {
   return function (dispatch) {
-    dispatch(beginAjaxCall('LOG_IN'));
     return (
-      githubCliEnterprise.getData({path: `/users/${username}`})
-      .then( response => { dispatch(successfulLogIn(response.data)) } )
-      .catch(err=> {throw err})
+        github.fetchUserRepositories({handle: username})
+        .then(
+        response => {
+          dispatch(successfulLogIn(response, username));
+          redirectToDashboard(username);
+        }
+      ).catch(err=> {throw err})
+    );
+  };
+};
+
+//Search - redux thunk
+export function search(query) {
+  return function (dispatch) {
+
+    return (
+      github.searchRepositories({handle: query})
+        .then(
+        response => {
+          dispatch(searchSuccess(response.items));
+          redirectToSearchResults(query);
+        }
+      ).catch(err=> {throw err})
     );
   };
 };
