@@ -1,26 +1,49 @@
 import React, {PropTypes} from 'react';
+import $ from "jquery";
+// import {bindActionCreators} from 'redux';
+// import {connect} from 'react-redux';
+// import SideMenu from './SideMenu.js';
+// import * as actions from '../actions/actionCreators.js';
+import {browserHistory} from 'react-router';
+
 
 export default class LogIn extends React.Component {
   constructor (props) {
     super();
     this.state = {
-
+      ajaxCallInProgress: false
     }
     this.logInHandler = this.logInHandler.bind(this);
+    this.redirectToDashboard = this.redirectToDashboard.bind(this);
+  }
+
+  redirectToDashboard(){
+     browserHistory.push(`/dashboard/${this.props.authentication.username}`)
   }
 
   logInHandler(event) {
     event.preventDefault();
+    this.setState({ajaxCallInProgress: true})
     const username = this.refs.username.value;
     const password = this.refs.password.value;
     this.props.actions.logIn(username, password)
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.ajaxCallInProgress) {
+  //     $('#sign-in').toggleClass('active');
+  //   }
+  // }
+
   render() {
     return (
       <div className="login-form">
       <div className="card card-container">
-          <img id="profile-img" className="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+          <img
+            id="profile-img"
+            className={"profile-img-card" + (this.state.ajaxCallInProgress ? ' active' : '') }
+            alt="git logo"
+            src="gitlogo.png" />
           <p id="profile-name" className="profile-name-card"></p>
           <form className="form-signin">
               <span id="reauth-email" className="reauth-email"></span>
@@ -32,7 +55,15 @@ export default class LogIn extends React.Component {
                       Remember me
                   </label>
               </div> */}
-              <button onClick={this.logInHandler} className="btn btn-lg btn-primary btn-block btn-signin">Sign in</button>
+              <button
+                onClick = {this.logInHandler}
+                className = {
+                "btn btn-lg btn-primary btn-block btn-signin has-spinner"
+                + (this.state.ajaxCallInProgress ? ' active' : '')}
+                >
+                 <span className="spinner"><i className="fa fa-refresh fa-spin"></i></span>
+                Sign in
+              </button>
           </form>
           {/* <a href="#" className="forgot-password">
               Forgot the password?

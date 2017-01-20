@@ -1,32 +1,37 @@
 
 import * as actionTypes from './actionTypes';
 import GitHubClient from '../libs/GitHubClient.js'
-
+import {token} from '../gitConfig.js';
 
 let githubCliEnterprise = new GitHubClient({
-  baseUri: "http://github.at.home/api/v3",
-  token: process.env.TOKEN_GHITHUB_ENTERPRISE
+  baseUri: "https://api.github.com",
+  token: token
 });
 
-
-//Log in
-export function logIn(username, password) {
-
-  return {type: actionTypes.LOG_IN_BEGIN};
+function beginAjaxCall(task) {
+  return {
+    type: actionTypes.AJAX_CALL_IN_PROGRESS,
+    task: task
+  };
 }
 
+//Log in action creator
+function successfulLogIn(userData) {
+  console.log(userData);
+  return {
+    type: actionTypes.LOG_IN_SUCCESS,
+    userData
+  };
+}
 
-// export function loadAllAuthors() {
-//   return function (dispatch) {
-//     dispatch(beginAjaxCall());
-//     return (
-//       {
-//         type: actionTypes.AJAX_CALL_IN_PROGRESS
-//       }
-//       ).catch(err=> {
-//         throw err;
-//       })
-//     );
-//   };
-//
-// }
+//Log in - redux thunk
+export function logIn(username, password) {
+  return function (dispatch) {
+    dispatch(beginAjaxCall('LOG_IN'));
+    return (
+      githubCliEnterprise.getData({path: `/users/${username}`})
+      .then( response => { dispatch(successfulLogIn(response.data)) } )
+      .catch(err=> {throw err})
+    );
+  };
+};

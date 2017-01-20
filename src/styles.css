@@ -254,16 +254,36 @@ ul {
     background-color: rgb(12, 97, 33);
 }
 
-.forgot-password {
-    color: rgb(104, 145, 162);
+
+
+.spinner {
+  display: inline-block;
+  opacity: 0;
+  max-width: 0;
+
+  -webkit-transition: opacity 0.25s, max-width 0.45s;
+  -moz-transition: opacity 0.25s, max-width 0.45s;
+  -o-transition: opacity 0.25s, max-width 0.45s;
+  transition: opacity 0.25s, max-width 0.45s; /* Duration fixed since we animate additional hidden width */
 }
 
-.forgot-password:hover,
-.forgot-password:active,
-.forgot-password:focus{
-    color: rgb(12, 97, 33);
+.has-spinner.active {
+  cursor:progress;
 }
 
-.login-form{
-  width: 100%;
+.has-spinner.active .spinner {
+  opacity: 1;
+  margin: 0 10px;
+  max-width: 50px; /* More than it will ever come, notice that this affects on animation duration */
+}
+
+img.active {
+  animation-name: logo;
+  animation-duration: 1s;
+
+}
+
+@keyframes logo {
+  from {transform: rotate(0);}
+  to {transform: rotate(360deg);}
 }
