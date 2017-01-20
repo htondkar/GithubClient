@@ -21,4 +21,3 @@ SearchResultRow.propTypes = {
 };
 
 export default SearchResultRow;
-https://api.github.com/users/htondkar/repos
