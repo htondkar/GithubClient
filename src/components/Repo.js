@@ -67,7 +67,9 @@ export default class Repo extends React.Component {
           ${repo.private ? 'type: private' : 'type: public'} |
           forks: ${repo.forks} |
           issues: ${repo.open_issues} |
-          watchers: ${repo.watchers}
+          watchers: ${repo.watchers} |
+          this is a ${repo.language} code base |
+          last push: ${repo.pushed_at}
           `}
         </div>
 
