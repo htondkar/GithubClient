@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import SideMenu from './SideMenu.js';
-import SearchResultRow from './SearchResultRow.js';
+import RepoRow from './RepoRow.js';
 import * as actions from '../actions/actionCreators.js';
 import {browserHistory} from 'react-router';
 
@@ -18,7 +18,7 @@ class SearchResults extends React.Component {
           search results:
           <hr/>
           <ol>
-            {results.map((result, i)=><SearchResultRow key={i} result={result} />)}
+            {results.map((result, i)=><RepoRow key={i} result={result} />)}
           </ol>
         </div>
       </div>

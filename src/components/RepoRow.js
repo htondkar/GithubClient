@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const SearchResultRow = (result) => {
+const RepoRow = (result) => {
   const item = result.result;
 
 
@@ -17,7 +17,7 @@ const SearchResultRow = (result) => {
   );
 }
 
-SearchResultRow.propTypes = {
+RepoRow.propTypes = {
 };
 
-export default SearchResultRow;
+export default RepoRow;

@@ -45,6 +45,17 @@ function searchRepositories({handle}) {
 }
 
 /*
+## get forks of a repo
+
+
+function searchRepositories({handle}) {
+  return this.getData({path:`/repos/${handle}//forks`})
+    .then(response => {
+      return response.data;
+    });
+}
+
+/*
 ## fetchOrganizationRepositories
 
 - parameter: `organization` (organization name)

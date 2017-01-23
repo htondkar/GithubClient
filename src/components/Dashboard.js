@@ -7,14 +7,11 @@ import {browserHistory} from 'react-router';
 import GitHubClient from '../libs/GitHubClient.js'
 import {token} from '../gitConfig.js';
 import Repo from './Repo';
-
-
 class Dashboard extends React.Component {
 
 
 
   render() {
-
     return (
       <div className="dashboard-wrapper">
         <SideMenu username={this.props.username} search={this.props.actions.search}/>
