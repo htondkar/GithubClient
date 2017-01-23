@@ -63,8 +63,8 @@ function fetchIssue({owner, repository, number}) {
 `fetchIssues` gets the list of the issues of a repository
 
 */
-function fetchIssues({owner, repository}) {
-  return this.getData({path:`/repos/${owner}/${repository}/issues`})
+function fetchIssues({repoFullName}) {
+  return this.getData({path:`/repos/${repoFullName}/issues`})
     .then(response => {
       return response.data;
     });

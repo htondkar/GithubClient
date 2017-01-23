@@ -6,12 +6,7 @@
  */
 
 import Requestable from './Requestable';
-import Utf8 from 'utf8';
-import {
-   Base64,
-} from 'js-base64';
-import debug from 'debug';
-const log = debug('github:repository');
+
 
 /**
  * Respository encapsulates the functionality to create, query, and modify files.

@@ -5,7 +5,12 @@ import rootReducer from './reducers/index';
 import thunk from 'redux-thunk';
 // laod initial state
 
-const defaultState = {};
+const defaultState = {
+  forks: [],
+  issues: [],
+  user: {},
+  search: {}
+};
 
 
 const store = createStore(

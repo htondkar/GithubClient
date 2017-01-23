@@ -3,13 +3,14 @@ import * as actionTypes from './actionTypes';
 import GitHubClient from '../libs/GitHubClient.js'
 import repositories from '../libs/features/repositories.js'
 import users from '../libs/features/users.js'
+import issues from '../libs/features/issues'
 import {token} from '../gitConfig.js';
 import {browserHistory} from 'react-router';
 
 let github = new GitHubClient({
   baseUri: "https://api.github.com",
   token: token
-}, repositories, users);
+}, repositories, users, issues);
 
 function beginAjaxCall(task) {
   return {
@@ -43,6 +44,22 @@ function searchSuccess(results) {
   };
 }
 
+function fetchRepoForksSuccess(forksList, repoFullName) {
+  return {
+    type: actionTypes.FETCH_FORKS_LIST_SUCCESS,
+    forksList,
+    repoFullName
+  };
+}
+
+function fetchRepoIssuesSuccess(issuesList, repoFullName) {
+  return {
+    type: actionTypes.FETCH_ISSUES_LIST_SUCCESS,
+    issuesList,
+    repoFullName
+  };
+}
+
 
 //Log in - redux thunk
 export function logIn(username, password) {
@@ -69,6 +86,35 @@ export function search(query) {
         response => {
           dispatch(searchSuccess(response.items));
           redirectToSearchResults(query);
+        }
+      ).catch(err=> {throw err})
+    );
+  };
+};
+
+
+//fetchRepoForks - redux thunk
+export function fetchRepoForks(repoFullName) {
+  return function (dispatch) {
+    return (
+      github.listForks({handle: repoFullName})
+        .then(
+        forksList => {
+          dispatch(fetchRepoForksSuccess(forksList, repoFullName));
+        }
+      ).catch(err=> {throw err})
+    );
+  };
+};
+
+//fetchRepoIssues - redux thunk
+export function fetchRepoIssues(repoFullName) {
+  return function (dispatch) {
+    return (
+      github.fetchIssues({repoFullName})
+        .then(
+        issuesList => {
+          dispatch(fetchRepoIssuesSuccess(issuesList, repoFullName));
         }
       ).catch(err=> {throw err})
     );

@@ -7,9 +7,11 @@ const customStyles = {
     top                   : '50%',
     left                  : '50%',
     right                 : 'auto',
-    bottom                : 'auto',
+    bottom                : 0,
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
+    minHeight             : '300px',
+    minWidth             : '300px'
   }
 };
 
@@ -18,48 +20,98 @@ export default class Repo extends React.Component {
     super();
 
     this.state = {
-      modalIsOpen: false,
+      forkModalIsOpen: false,
+      issuesModalIsOpen: false,
       asyncCall: false
     };
 
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    // this.openForksModal = this.openForksModal.bind(this);
+    // this.closeForksModal = this.closeForksModal.bind(this);
   }
 
-  openModal() {
+  openForksModal = (repoName) => {
+    this.props.fetchRepoForks(repoName);
+     this.setState({
+       forkModalIsOpen: true,
+       asyncCall: true
+     });
 
-   this.setState({modalIsOpen: true});
-   this.props.fetchForks()
  }
 
-  closeModal() {
-    this.setState({modalIsOpen: false});
-  }
+ closeForksModal = () => {
+   this.setState({forkModalIsOpen: false});
+ }
+
+  openIssuesModal = (repoName) => {
+    this.props.fetchRepoIssues(repoName);
+     this.setState({
+       issuesModalIsOpen: true,
+       asyncCall: true
+     });
+
+ }
+ closeIssuesModal = () => {
+   this.setState({issuesModalIsOpen: false});
+ }
+
 
   render() {
-
     const repo = this.props.repo;
     console.log(repo);
-    repo
+    const forks = this.props.forksList[repo.full_name] || [];
+    const issues = this.props.issuesList[repo.full_name] || [];
     return (
-      <div>
-        repo name : {repo.name} | {repo.private ? 'private repo' : 'public repo'}
+      <li>
+        <div>
+          {`repository name: ${repo.name} |
+          ${repo.private ? 'type: private' : 'type: public'} |
+          forks: ${repo.forks} |
+          issues: ${repo.open_issues} |
+          watchers: ${repo.watchers}
+          `}
+        </div>
 
-        <button onClick={this.openModal}>forks</button>
+        <button onClick={()=>this.openForksModal(repo.full_name)}>see forks</button>
         <Modal
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
+          isOpen={this.state.forkModalIsOpen}
+          onRequestClose={this.closeForksModal}
           style={customStyles}
-          contentLabel="Example Modal"
+          contentLabel="Forks Modal"
         >
-
-          <h2 ref="subtitle">Hello</h2>
-          <button onClick={this.closeModal}>close</button>
-          <div id="forks">I am a modal</div>
+            <h2>forks list</h2>
+            <button onClick={this.closeForksModal}>close</button>
+            <ol id="forks">
+              {forks.length == 0 ? 'No forks' : 'last 30 forks'}
+              {forks.map(fork=>{
+                return (<li key={fork.id}>
+                  {`forked by ${fork.owner.login} | at ${fork.created_at}`}
+                </li>)
+                })
+              }
+            </ol>
         </Modal>
 
-      </div>
+
+        <button onClick={()=>this.openIssuesModal(repo.full_name)}>see issues</button>
+        <Modal
+          isOpen={this.state.issuesModalIsOpen}
+          onRequestClose={this.closeIssuesModal}
+          style={customStyles}
+          contentLabel="Issues Modal"
+        >
+            <h2>issues list</h2>
+            <button onClick={this.closeIssuesModal}>close</button>
+            <ul id="issues">
+              {issues.length == 0 ? 'No issues' : 'last 30 open issues'}
+              {issues.map(issue=>{
+                return (<li key={issue.number}>
+                    {`issue #${issue.number}: ${issue.title} | by ${issue.user.login} | on ${issue.created_at}`}
+                  </li>)
+                })
+              }
+            </ul>
+        </Modal>
+      </li>
     );
   }
 }

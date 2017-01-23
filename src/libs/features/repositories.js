@@ -27,7 +27,7 @@ let githubCli = new GitHubClient({
 
 */
 function fetchUserRepositories({handle}) {
-  return this.getData({path:`/users/${handle}/repos`})
+  return this.getData({path:`/users/${handle}/repos?per_page=100`})
     .then(response => {
       return response.data;
     });
@@ -39,6 +39,18 @@ function fetchUserRepositories({handle}) {
 
 function searchRepositories({handle}) {
   return this.getData({path:`/search/repositories?q=${handle}`})
+    .then(response => {
+      return response.data;
+    });
+}
+
+/*
+
+/*
+## fetch repository forks
+*/
+function listForks({handle}) {
+  return this.getData({path:`/repos/${handle}/forks`})
     .then(response => {
       return response.data;
     });
@@ -177,5 +189,6 @@ module.exports = {
   createPrivateRepository: createPrivateRepository,
   createPublicOrganizationRepository: createPublicOrganizationRepository,
   createPrivateOrganizationRepository: createPrivateOrganizationRepository,
-  searchRepositories: searchRepositories
+  searchRepositories: searchRepositories,
+  listForks: listForks
 };
