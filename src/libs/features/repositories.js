@@ -57,27 +57,26 @@ function listForks({handle}) {
 }
 
 /*
-## get forks of a repo
-
-
-function searchRepositories({handle}) {
-  return this.getData({path:`/repos/${handle}//forks`})
+## fork a repo
+*/
+function forkRepo({repoFullName}) {
+  return this.postData({path:`/repos/${repoFullName}/forks`})
     .then(response => {
       return response.data;
     });
 }
 
-/*
-## fetchOrganizationRepositories
 
-- parameter: `organization` (organization name)
-- return: `Promise`
+// ## fetchOrganizationRepositories
+//
+// - parameter: `organization` (organization name)
+// - return: `Promise`
+//
+// ### Description
+//
+// `fetchOrganizationRepositories` gets the list of the repositories of an organization
 
-### Description
 
-`fetchOrganizationRepositories` gets the list of the repositories of an organization
-
-*/
 function fetchOrganizationRepositories({organization}) {
   return this.getData({path:`/orgs/${organization}/repos`})
     .then(response => {
@@ -190,5 +189,6 @@ module.exports = {
   createPublicOrganizationRepository: createPublicOrganizationRepository,
   createPrivateOrganizationRepository: createPrivateOrganizationRepository,
   searchRepositories: searchRepositories,
-  listForks: listForks
+  listForks: listForks,
+  forkRepo: forkRepo,
 };

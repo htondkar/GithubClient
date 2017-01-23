@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Modal from 'react-modal';
-
+import toastr from 'toastr';
 
 const customStyles = {
   content : {
@@ -18,15 +18,18 @@ const customStyles = {
 export default class Repo extends React.Component {
   constructor() {
     super();
-
     this.state = {
+      forkedRepos: new Set(),
       forkModalIsOpen: false,
       issuesModalIsOpen: false,
       asyncCall: false
     };
+  }
 
-    // this.openForksModal = this.openForksModal.bind(this);
-    // this.closeForksModal = this.closeForksModal.bind(this);
+  componentWillReceiveProps(nextProps){
+    if (nextProps.forkedRepos) {
+      this.setState({forkedRepos: nextProps.forkedRepos});
+    }
   }
 
   openForksModal = (repoName) => {
@@ -54,10 +57,17 @@ export default class Repo extends React.Component {
    this.setState({issuesModalIsOpen: false});
  }
 
+ forkRepo = (repoFullName) => {
+   this.props.forkRepo(repoFullName)
+   .then(() => toastr.success(`you successfuly forked ${repoFullName}`))
+   .catch((err) => toastr.error(err))
+ }
 
   render() {
     const repo = this.props.repo;
-    console.log(repo);
+    const isForked = (this.state.forkedRepos.has(repo.full_name.substr(repo.full_name.indexOf("/") + 1)));
+    console.log(repo.full_name);
+    console.log(this.state.forkedRepos);
     const forks = this.props.forksList[repo.full_name] || [];
     const issues = this.props.issuesList[repo.full_name] || [];
     return (
@@ -74,6 +84,13 @@ export default class Repo extends React.Component {
         </div>
 
         <button onClick={()=>this.openForksModal(repo.full_name)}>see forks</button>
+        <button onClick={()=>this.openIssuesModal(repo.full_name)}>see issues</button>
+        <button
+          onClick={()=>this.forkRepo(repo.full_name)}
+          disabled={isForked}>
+          {isForked ? 'already forked' : 'fork it'}
+        </button>
+
         <Modal
           isOpen={this.state.forkModalIsOpen}
           onRequestClose={this.closeForksModal}
@@ -93,8 +110,6 @@ export default class Repo extends React.Component {
             </ol>
         </Modal>
 
-
-        <button onClick={()=>this.openIssuesModal(repo.full_name)}>see issues</button>
         <Modal
           isOpen={this.state.issuesModalIsOpen}
           onRequestClose={this.closeIssuesModal}

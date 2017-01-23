@@ -289,3 +289,7 @@ img.active {
   width: 80%;
   transition: width 0.4s ease-in-out;
 }
+
+:disabled:hover{
+  cursor: not-allowed;
+}

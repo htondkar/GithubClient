@@ -7,6 +7,7 @@ import issues from '../libs/features/issues'
 import {token} from '../gitConfig.js';
 import {browserHistory} from 'react-router';
 
+
 let github = new GitHubClient({
   baseUri: "https://api.github.com",
   token: token
@@ -57,6 +58,13 @@ function fetchRepoIssuesSuccess(issuesList, repoFullName) {
     type: actionTypes.FETCH_ISSUES_LIST_SUCCESS,
     issuesList,
     repoFullName
+  };
+}
+
+function forkRepoSuccess(response) {
+  return {
+    type: actionTypes.FORK_REPO_SUCCESS,
+    response,
   };
 }
 
@@ -115,6 +123,19 @@ export function fetchRepoIssues(repoFullName) {
         .then(
         issuesList => {
           dispatch(fetchRepoIssuesSuccess(issuesList, repoFullName));
+        }
+      ).catch(err=> {throw err})
+    );
+  };
+};
+
+//forkRepo - redux thunk
+export function forkRepo(repoFullName) {
+  return function (dispatch) {
+    return (
+      github.forkRepo({repoFullName})
+        .then(response => {
+          dispatch(forkRepoSuccess(response));
         }
       ).catch(err=> {throw err})
     );
