@@ -31,6 +31,7 @@
     "html-webpack-plugin": "2.26.0",
     "http-proxy-middleware": "0.17.3",
     "jest": "18.1.0",
+    "json-beautify": "^1.0.1",
     "json-loader": "0.5.4",
     "json-markup": "^1.1.0",
     "node-sass": "^4.3.0",
@@ -53,6 +54,7 @@
   "dependencies": {
     "babel-polyfill": "6.20.0",
     "jquery": "3.1.1",
+    "json-markup": "^1.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-modal": "^1.6.5",

@@ -8,7 +8,6 @@ import {token} from '../gitConfig.js';
 import Repo from './Repo';
 
 
-
 class Dashboard extends React.Component {
   render() {
     return (

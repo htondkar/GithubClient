@@ -2,10 +2,10 @@ import React, {PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import SideMenu from './SideMenu.js';
-import RepoRow from './RepoRow.js';
+import Repo from './Repo.js';
 import * as actions from '../actions/actionCreators.js';
 import {browserHistory} from 'react-router';
-
+var beautify = require("json-format");
 
 class SearchResults extends React.Component {
 
@@ -15,10 +15,22 @@ class SearchResults extends React.Component {
       <div className="dashboard-wrapper">
         <SideMenu username={this.props.username} search={this.props.actions.search}/>
         <div className="dashboard">
-          search results:
-          <hr/>
-          <ol>
-            {results.map((result, i)=><RepoRow key={i} result={result} />)}
+          <ol className="list-group">
+            {results.map((repo)=><Repo
+              key={repo.full_name}
+              repo={repo}
+              fetchRepoForks={this.props.actions.fetchRepoForks}
+              fetchRepoIssues={this.props.actions.fetchRepoIssues}
+              forksList={this.props.forksList}
+              issuesList={this.props.issuesList}
+              forkRepo={this.props.actions.forkRepo}
+              forkedRepos={this.props.forkedRepos}
+              watchRepo={this.props.actions.watchRepo}
+              watchedRepos={this.props.watchedRepos}
+              createIssue={this.props.actions.createIssue}
+                />
+              )
+            }
           </ol>
         </div>
       </div>
@@ -27,11 +39,16 @@ class SearchResults extends React.Component {
 }
 
 
+
 //connect the component to redux store
 function mapStateToProps(state) {
   return {
     searchResults: state.search.searchResults,
-    username: state.user.username
+    username: state.user.username,
+    forksList: state.forks,
+    issuesList: state.issues,
+    forkedRepos: state.forks.forkedRepos,
+    watchedRepos: state.watch,
   };
 }
 
