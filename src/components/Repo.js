@@ -94,8 +94,8 @@ export default class Repo extends React.Component {
     const forks = this.props.forksList[repo.full_name] || [];
     const issues = this.props.issuesList[repo.full_name] || [];
     return (
-      <li>
-        <div>
+      <li className="list-group-item">
+        <h4>
           {`repository name: ${repo.name} |
           ${repo.private ? 'type: private' : 'type: public'} |
           forks: ${repo.forks} |
@@ -104,7 +104,7 @@ export default class Repo extends React.Component {
           this is a ${repo.language} code base |
           last push: ${repo.pushed_at}
           `}
-        </div>
+        </h4>
         <div className="btn-group">
           <button
             onClick={()=>this.openForksModal(repo.full_name)}
@@ -128,9 +128,9 @@ export default class Repo extends React.Component {
             disabled={isWatched}>
             {isWatched ? 'already watched' : 'watch it'}
           </button>
+          <button className="btn btn-primary" data-toggle="collapse" data-target={`#${repo.name}`}>new issue</button>
         </div>
-        <button data-toggle="collapse" data-target="#issue">new issue</button>
-        <div className="collapse" id="issue">
+        <div className="collapse" id={repo.name}>
           <form ref="issueForm" className="form-group">
             <input type="text" ref="issueTitle" placeholder="title" className="form-control"/>
             <input type="text" ref="issueBody" placeholder="body" className="form-control"/>
