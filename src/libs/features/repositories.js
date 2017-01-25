@@ -66,6 +66,16 @@ function forkRepo({repoFullName}) {
     });
 }
 
+/*
+## watch a repo
+*/
+function watchRepo({repoFullName}) {
+  return this.putData({path:`/user/subscriptions/${repoFullName}`})
+    .then(response => {
+      return response.data;
+    });
+}
+
 
 // ## fetchOrganizationRepositories
 //
@@ -191,4 +201,5 @@ module.exports = {
   searchRepositories: searchRepositories,
   listForks: listForks,
   forkRepo: forkRepo,
+  watchRepo: watchRepo
 };

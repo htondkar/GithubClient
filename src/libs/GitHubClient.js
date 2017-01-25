@@ -15,11 +15,11 @@ class HttpException extends Error {
 }
 
 class GitHubClient {
-  constructor({baseUri, token}, ...features) {
+  constructor({baseUri, token, ContentType = "application/json"}, ...features) {
     this.baseUri = baseUri;
     this.credentials = token !== null && token.length > 0 ? "token" + ' ' + token : null;
     this.headers = {
-      "Content-Type": "application/json",
+      "Content-Type": ContentType,
       "Accept": "application/vnd.github.v3.full+json",
       "Authorization": this.credentials
     };
@@ -34,11 +34,15 @@ class GitHubClient {
       body: data!==null ? JSON.stringify(data) : null
     })
     .then(response => {
+      console.log(response);
       _response = response;
       // if response is ok transform response.text to json object
       // else throw error
       if (response.ok) {
-        return response.json()
+        if (response.status == 204) {
+          return response.ok;
+        }
+        return response.json();
       } else {
         throw new HttpException({
           message: `HttpException[${method}]`,

@@ -15,11 +15,16 @@ const customStyles = {
   }
 };
 
+function includes(arr, item) {
+    return (arr.indexOf(item) != -1);
+}
+
 export default class Repo extends React.Component {
   constructor() {
     super();
     this.state = {
       forkedRepos: new Set(),
+      watchedRepos: [],
       forkModalIsOpen: false,
       issuesModalIsOpen: false,
       asyncCall: false
@@ -29,6 +34,9 @@ export default class Repo extends React.Component {
   componentWillReceiveProps(nextProps){
     if (nextProps.forkedRepos) {
       this.setState({forkedRepos: nextProps.forkedRepos});
+    }
+    if (nextProps.watchedRepos) {
+      this.setState({watchedRepos: nextProps.watchedRepos});
     }
   }
 
@@ -63,11 +71,26 @@ export default class Repo extends React.Component {
    .catch((err) => toastr.error(err))
  }
 
+ watchRepo = (repoFullName) => {
+   this.props.watchRepo(repoFullName)
+   .then(() => toastr.success(`you successfuly watched ${repoFullName}`))
+   .catch((err) => toastr.error(err))
+ }
+
+ createIssue = (repoFullName) => {
+   const title = this.refs.issueTitle.value
+   const Body = this.refs.issueBody.value
+   this.props.createIssue(title, Body, repoFullName)
+   .then(() => {
+     this.refs.issueForm.reset()
+   })
+   .catch((err) => toastr.error(err))
+ }
+
   render() {
     const repo = this.props.repo;
     const isForked = (this.state.forkedRepos.has(repo.full_name.substr(repo.full_name.indexOf("/") + 1)));
-    console.log(repo.full_name);
-    console.log(this.state.forkedRepos);
+    const isWatched = this.state.watchedRepos.includes(repo.full_name);
     const forks = this.props.forksList[repo.full_name] || [];
     const issues = this.props.issuesList[repo.full_name] || [];
     return (
@@ -82,14 +105,42 @@ export default class Repo extends React.Component {
           last push: ${repo.pushed_at}
           `}
         </div>
-
-        <button onClick={()=>this.openForksModal(repo.full_name)}>see forks</button>
-        <button onClick={()=>this.openIssuesModal(repo.full_name)}>see issues</button>
-        <button
-          onClick={()=>this.forkRepo(repo.full_name)}
-          disabled={isForked}>
-          {isForked ? 'already forked' : 'fork it'}
-        </button>
+        <div className="btn-group">
+          <button
+            onClick={()=>this.openForksModal(repo.full_name)}
+            className="btn btn-primary">
+            see forks
+          </button>
+          <button
+            onClick={()=>this.openIssuesModal(repo.full_name)}
+            className="btn btn-primary">
+            see issues
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={()=>this.forkRepo(repo.full_name)}
+            disabled={isForked}>
+            {isForked ? 'already forked' : 'fork it'}
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={()=>this.watchRepo(repo.full_name)}
+            disabled={isWatched}>
+            {isWatched ? 'already watched' : 'watch it'}
+          </button>
+        </div>
+        <button data-toggle="collapse" data-target="#issue">new issue</button>
+        <div className="collapse" id="issue">
+          <form ref="issueForm" className="form-group">
+            <input type="text" ref="issueTitle" placeholder="title" className="form-control"/>
+            <input type="text" ref="issueBody" placeholder="body" className="form-control"/>
+            <botton
+              onClick={()=>this.createIssue(repo.full_name)}
+              className="btn btn-default">
+              create issue!
+            </botton>
+          </form>
+        </div>
 
         <Modal
           isOpen={this.state.forkModalIsOpen}

@@ -9,6 +9,14 @@ export default function issues(state = {}, action) {
         };
         break;
 
+      // case actionsTypes.CREATE_ISSUE_SUCCESS:
+      //   const issuesList = state.issuesList || [];
+      //   return {
+      //     ...state,
+      //     issuesList: issuesList.push({[action.repoFullName]: action.issueNumber })
+      //   };
+      //   break;
+
       default:
         return state;
     }

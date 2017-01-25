@@ -26,6 +26,9 @@ class Dashboard extends React.Component {
                 issuesList={this.props.issuesList}
                 forkRepo={this.props.actions.forkRepo}
                 forkedRepos={this.props.forkedRepos}
+                watchRepo={this.props.actions.watchRepo}
+                watchedRepos={this.props.watchedRepos}
+                createIssue={this.props.actions.createIssue}
               />
               )
             }
@@ -44,7 +47,8 @@ function mapStateToProps(state) {
     username: state.user.username,
     forksList: state.forks,
     issuesList: state.issues,
-    forkedRepos: state.forks.forkedRepos
+    forkedRepos: state.forks.forkedRepos,
+    watchedRepos: state.watch,
   };
 }
 

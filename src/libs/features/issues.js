@@ -26,10 +26,17 @@ let githubCli = new GitHubClient({
 `createIssue` creates an issue for a repository
 
 */
-function createIssue({title, body, labels, milestone, assignees, owner, repository}) {
-  return this.postData({path:`/repos/${owner}/${repository}/issues`, data:{
-    title, body, labels, milestone, assignees, owner, repository
-  }}).then(response => {
+function createIssue({title, body, repoFullName}) {
+  const owner = repoFullName.substr(0, repoFullName.indexOf("/"));
+  const repository = repoFullName.substr(repoFullName.indexOf("/") + 1);
+  const milestone = undefined;
+  const labels = undefined;
+  const assignees = undefined;
+
+  return this.postData({
+    path: `/repos/${owner}/${repository}/issues`,
+    data: {title, body, milestone, labels, assignees, owner, repository}})
+   .then(response => {
     return response.data;
   });
 }

@@ -9,7 +9,8 @@ const defaultState = {
   forks: [],
   issues: [],
   user: {},
-  search: {}
+  search: {},
+  watch: []
 };
 
 

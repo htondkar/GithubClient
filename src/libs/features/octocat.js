@@ -14,7 +14,6 @@ let githubCli = new GitHubClient({
 }, octocat); //<-- add octocat feature
 ```
  */
-const fetch = require('node-fetch');
 
 /*
 ## octocat
