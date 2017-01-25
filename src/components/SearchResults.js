@@ -15,7 +15,7 @@ class SearchResults extends React.Component {
       <div className="dashboard-wrapper">
         <SideMenu username={this.props.username} search={this.props.actions.search}/>
         <div className="dashboard">
-          <ol className="list-group">
+          <ul className="list-group">
             {results.map((repo)=><Repo
               key={repo.full_name}
               repo={repo}
@@ -31,7 +31,7 @@ class SearchResults extends React.Component {
                 />
               )
             }
-          </ol>
+          </ul>
         </div>
       </div>
     )

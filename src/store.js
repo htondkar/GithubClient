@@ -3,8 +3,9 @@ import {syncHistoryWithStore} from 'react-router-redux';
 import {browserHistory} from 'react-router';
 import rootReducer from './reducers/index';
 import thunk from 'redux-thunk';
-// laod initial state
+import persistState from 'redux-localstorage'
 
+// laod initial state
 const defaultState = {
   forks: [],
   issues: [],
@@ -19,7 +20,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   rootReducer,
   defaultState,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk), persistState())
 );
 
 export const history = syncHistoryWithStore(browserHistory, store);

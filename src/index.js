@@ -6,6 +6,7 @@ import store, {history} from './store';
 import LogIn from './components/LogIn.js';
 import Dashboard from './components/Dashboard.js';
 import SearchResults from './components/SearchResults.js';
+import 'jquery';
 import bootstrap from '../node_modules/bootstrap/dist/js/bootstrap.min.js';
 import './styles.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';

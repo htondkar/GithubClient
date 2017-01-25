@@ -14,7 +14,7 @@ class Dashboard extends React.Component {
       <div className="dashboard-wrapper">
         <SideMenu username={this.props.username} search={this.props.actions.search}/>
         <div className="dashboard">
-          <ol className="list-group">
+          <ul className="list-group">
             {this.props.userRepos
               .map((repo)=><Repo
                 key={repo.name}
@@ -31,7 +31,7 @@ class Dashboard extends React.Component {
               />
               )
             }
-        </ol>
+        </ul>
         </div>
       </div>
     )

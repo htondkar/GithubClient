@@ -94,92 +94,96 @@ export default class Repo extends React.Component {
     const forks = this.props.forksList[repo.full_name] || [];
     const issues = this.props.issuesList[repo.full_name] || [];
     return (
-      <li className="list-group-item">
-        <h4>
-          {`repository name: ${repo.name} |
-          ${repo.private ? 'type: private' : 'type: public'} |
-          forks: ${repo.forks} |
-          issues: ${repo.open_issues} |
-          watchers: ${repo.watchers} |
-          this is a ${repo.language} code base |
-          last push: ${repo.pushed_at}
-          `}
-        </h4>
-        <div className="btn-group">
-          <button
-            onClick={()=>this.openForksModal(repo.full_name)}
-            className="btn btn-primary">
-            see forks
-          </button>
-          <button
-            onClick={()=>this.openIssuesModal(repo.full_name)}
-            className="btn btn-primary">
-            see issues
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={()=>this.forkRepo(repo.full_name)}
-            disabled={isForked}>
-            {isForked ? 'already forked' : 'fork it'}
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={()=>this.watchRepo(repo.full_name)}
-            disabled={isWatched}>
-            {isWatched ? 'already watched' : 'watch it'}
-          </button>
-          <button className="btn btn-primary" data-toggle="collapse" data-target={`#${repo.name}`}>new issue</button>
-        </div>
-        <div className="collapse" id={repo.name}>
-          <form ref="issueForm" className="form-group">
-            <input type="text" ref="issueTitle" placeholder="title" className="form-control"/>
-            <input type="text" ref="issueBody" placeholder="body" className="form-control"/>
-            <botton
-              onClick={()=>this.createIssue(repo.full_name)}
-              className="btn btn-default">
-              create issue!
-            </botton>
-          </form>
-        </div>
-
-        <Modal
-          isOpen={this.state.forkModalIsOpen}
-          onRequestClose={this.closeForksModal}
-          style={customStyles}
-          contentLabel="Forks Modal"
-        >
-            <h2>forks list</h2>
-            <button onClick={this.closeForksModal}>close</button>
-            <ol id="forks">
-              {forks.length == 0 ? 'No forks' : 'last 30 forks'}
-              {forks.map(fork=>{
-                return (<li key={fork.id}>
-                  {`forked by ${fork.owner.login} | at ${fork.created_at}`}
-                </li>)
-                })
-              }
-            </ol>
-        </Modal>
-
-        <Modal
-          isOpen={this.state.issuesModalIsOpen}
-          onRequestClose={this.closeIssuesModal}
-          style={customStyles}
-          contentLabel="Issues Modal"
-        >
-            <h2>issues list</h2>
-            <button onClick={this.closeIssuesModal}>close</button>
-            <ul id="issues">
-              {issues.length == 0 ? 'No issues' : 'last 30 open issues'}
-              {issues.map(issue=>{
-                return (<li key={issue.number}>
-                    {`issue #${issue.number}: ${issue.title} | by ${issue.user.login} | on ${issue.created_at}`}
-                  </li>)
-                })
-              }
+      <div className="repo-rows">
+        <li>
+          <div className="list-group">
+            <span className="list-group-item">
+              {`Repository name: ${repo.name} ${repo.private ? ' (private)' : ' (public)'}`}
+            </span>
+            <ul className="list-group-item">
+              <li className="">{`${repo.forks} Forks`}</li>
+              <li className="">{`${repo.open_issues} Issues`}</li>
+              <li className="">{`${repo.watchers} Watchers`}</li>
             </ul>
-        </Modal>
-      </li>
+            <span className="list-group-item">{`This is a ${repo.language} code base`}</span>
+            <span className="list-group-item">{`Last push: ${repo.pushed_at}`}</span>
+          </div>
+          <div className="btn-group">
+            <button
+              onClick={()=>this.openForksModal(repo.full_name)}
+              className="btn btn-default">
+              see forks
+            </button>
+            <button
+              onClick={()=>this.openIssuesModal(repo.full_name)}
+              className="btn btn-default">
+              see issues
+            </button>
+            <button
+              className="btn btn-default"
+              onClick={()=>this.forkRepo(repo.full_name)}
+              disabled={isForked}>
+              {isForked ? 'already forked' : 'fork it'}
+            </button>
+            <button
+              className="btn btn-default"
+              onClick={()=>this.watchRepo(repo.full_name)}
+              disabled={isWatched}>
+              {isWatched ? 'already watched' : 'watch it'}
+            </button>
+            <button className="btn btn-default" data-toggle="collapse" data-target={`#${repo.name}`}>new issue</button>
+          </div>
+          <div className="collapse" id={repo.name}>
+            <form ref="issueForm" className="form-group">
+              <input type="text" ref="issueTitle" placeholder="title" className="form-control"/>
+              <input type="text" ref="issueBody" placeholder="body" className="form-control"/>
+              <botton
+                onClick={()=>this.createIssue(repo.full_name)}
+                className="btn btn-default">
+                create issue!
+              </botton>
+            </form>
+          </div>
+
+          <Modal
+            isOpen={this.state.forkModalIsOpen}
+            onRequestClose={this.closeForksModal}
+            style={customStyles}
+            contentLabel="Forks Modal"
+          >
+              <h2>forks list</h2>
+              <button onClick={this.closeForksModal}>close</button>
+              <ol id="forks">
+                {forks.length == 0 ? 'No forks' : 'last 30 forks'}
+                {forks.map(fork=>{
+                  return (<li key={fork.id}>
+                    {`forked by ${fork.owner.login} | at ${fork.created_at}`}
+                  </li>)
+                  })
+                }
+              </ol>
+          </Modal>
+
+          <Modal
+            isOpen={this.state.issuesModalIsOpen}
+            onRequestClose={this.closeIssuesModal}
+            style={customStyles}
+            contentLabel="Issues Modal"
+          >
+              <h2>issues list</h2>
+              <button onClick={this.closeIssuesModal}>close</button>
+              <ul id="issues">
+                {issues.length == 0 ? 'No issues' : 'last 30 open issues'}
+                {issues.map(issue=>{
+                  return (<li key={issue.number}>
+                      {`issue #${issue.number}: ${issue.title} | by ${issue.user.login} | on ${issue.created_at}`}
+                    </li>)
+                  })
+                }
+              </ul>
+          </Modal>
+        </li>
+      </div>
     );
   }
 }
