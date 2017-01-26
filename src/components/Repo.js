@@ -4,14 +4,14 @@ import toastr from 'toastr';
 
 const customStyles = {
   content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 0,
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)',
-    minHeight             : '300px',
-    minWidth             : '300px'
+    top          : '50%',
+    left         : '50%',
+    right        : 'auto',
+    bottom       : 0,
+    marginRight  : '-50%',
+    transform    : 'translate(-50%, -50%)',
+    minHeight    : '300px',
+    minWidth     : '300px'
   }
 };
 
@@ -20,6 +20,7 @@ function includes(arr, item) {
 }
 
 export default class Repo extends React.Component {
+
   constructor() {
     super();
     this.state = {
@@ -41,7 +42,7 @@ export default class Repo extends React.Component {
   }
 
   openForksModal = (repoName) => {
-    this.props.fetchRepoForks(repoName);
+    this.props.fetchRepoForks(repoName, this.props.username, this.props.password);
      this.setState({
        forkModalIsOpen: true,
        asyncCall: true
@@ -54,7 +55,7 @@ export default class Repo extends React.Component {
  }
 
   openIssuesModal = (repoName) => {
-    this.props.fetchRepoIssues(repoName);
+    this.props.fetchRepoIssues(repoName, this.props.username, this.props.password);
      this.setState({
        issuesModalIsOpen: true,
        asyncCall: true
@@ -66,13 +67,13 @@ export default class Repo extends React.Component {
  }
 
  forkRepo = (repoFullName) => {
-   this.props.forkRepo(repoFullName)
+   this.props.forkRepo(repoFullName, this.props.username, this.props.password)
    .then(() => toastr.success(`you successfuly forked ${repoFullName}`))
    .catch((err) => toastr.error(err))
  }
 
  watchRepo = (repoFullName) => {
-   this.props.watchRepo(repoFullName)
+   this.props.watchRepo(repoFullName, this.props.username, this.props.password)
    .then(() => toastr.success(`you successfuly watched ${repoFullName}`))
    .catch((err) => toastr.error(err))
  }
@@ -80,7 +81,7 @@ export default class Repo extends React.Component {
  createIssue = (repoFullName) => {
    const title = this.refs.issueTitle.value
    const Body = this.refs.issueBody.value
-   this.props.createIssue(title, Body, repoFullName)
+   this.props.createIssue(title, Body, repoFullName, this.props.username, this.props.password)
    .then(() => {
      this.refs.issueForm.reset()
    })
@@ -88,11 +89,13 @@ export default class Repo extends React.Component {
  }
 
   render() {
+    
     const repo = this.props.repo;
     const isForked = (this.state.forkedRepos.has(repo.full_name.substr(repo.full_name.indexOf("/") + 1)));
     const isWatched = this.state.watchedRepos.includes(repo.full_name);
     const forks = this.props.forksList[repo.full_name] || [];
     const issues = this.props.issuesList[repo.full_name] || [];
+
     return (
       <div className="repo-rows">
         <li>

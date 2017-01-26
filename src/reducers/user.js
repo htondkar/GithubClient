@@ -7,6 +7,7 @@ export default function user(state = {}, action) {
         return {
           logedIn: true,
           username: action.username,
+          password: action.password,
           userRepos: action.userData
         };
         break;

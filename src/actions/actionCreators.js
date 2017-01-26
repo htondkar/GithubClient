@@ -4,22 +4,19 @@ import GitHubClient from '../libs/GitHubClient.js'
 import repositories from '../libs/features/repositories.js'
 import users from '../libs/features/users.js'
 import issues from '../libs/features/issues'
-import {token} from '../gitConfig.js';
+// import {token} from '../gitConfig.js';
 import {browserHistory} from 'react-router';
 import toastr from 'toastr';
 
-let github = new GitHubClient({
-  baseUri: "https://api.github.com",
-  token: token,
-  ContentType: undefined
-}, repositories, users, issues);
 
-let githubContentZero = new GitHubClient({
-  baseUri: "https://api.github.com",
-  token: token,
-  ContentType: 0
-}, repositories);
-
+function client(username, password, ContentType = undefined) {
+  return new GitHubClient({
+    baseUri: "https://api.github.com",
+    username: username,
+    password:password,
+    ContentType: undefined
+  }, repositories, users, issues);
+}
 
 function beginAjaxCall(task) {
   return {
@@ -27,7 +24,6 @@ function beginAjaxCall(task) {
     task: task
   };
 }
-
 
 function redirectToDashboard(username){
    browserHistory.push(`/dashboard/${username}`)
@@ -38,11 +34,12 @@ function redirectToSearchResults(query){
 }
 
 //Log in action creator
-function successfulLogIn(userData, username) {
+function successfulLogIn(userData, username, password) {
   return {
     type: actionTypes.LOG_IN_SUCCESS,
     userData,
-    username
+    username,
+    password
   };
 }
 
@@ -91,15 +88,15 @@ function watchRepoSuccess(repoFullName) {
 //   };
 // }
 
-
 //Log in - redux thunk
 export function logIn(username, password) {
   return function (dispatch) {
+    const github = client(username, password);
     return (
         github.fetchUserRepositories({handle: username})
         .then(
         response => {
-          dispatch(successfulLogIn(response, username));
+          dispatch(successfulLogIn(response, username, password));
           redirectToDashboard(username);
         }
       ).catch(err=> {throw err})
@@ -108,9 +105,9 @@ export function logIn(username, password) {
 };
 
 //Search - redux thunk
-export function search(query) {
+export function search(query, username, password) {
   return function (dispatch) {
-
+    const github = client(username, password);
     return (
       github.searchRepositories({handle: query})
         .then(
@@ -125,8 +122,9 @@ export function search(query) {
 
 
 //fetchRepoForks - redux thunk
-export function fetchRepoForks(repoFullName) {
+export function fetchRepoForks(repoFullName, username, password) {
   return function (dispatch) {
+    const github = client(username, password);
     return (
       github.listForks({handle: repoFullName})
         .then(
@@ -139,8 +137,9 @@ export function fetchRepoForks(repoFullName) {
 };
 
 //fetchRepoIssues - redux thunk
-export function fetchRepoIssues(repoFullName) {
+export function fetchRepoIssues(repoFullName, username, password) {
   return function (dispatch) {
+    const github = client(username, password);
     return (
       github.fetchIssues({repoFullName})
         .then(
@@ -153,8 +152,9 @@ export function fetchRepoIssues(repoFullName) {
 };
 
 //forkRepo - redux thunk
-export function forkRepo(repoFullName) {
+export function forkRepo(repoFullName, username, password) {
   return function (dispatch) {
+    const github = client(username, password);
     return (
       github.forkRepo({repoFullName})
         .then(response => {
@@ -166,8 +166,9 @@ export function forkRepo(repoFullName) {
 };
 
 //create an issue for a Repo - redux thunk
-export function createIssue(title, body, repoFullName) {
+export function createIssue(title, body, repoFullName, username, password) {
   return function (dispatch) {
+    const github = client(username, password);
     return (
       github.createIssue({title, body, repoFullName})
         .then((response) => {
@@ -181,10 +182,11 @@ export function createIssue(title, body, repoFullName) {
 };
 
 //watch a repo (LEGACY) - redux thunk
-export function watchRepo(repoFullName) {
+export function watchRepo(repoFullName, username, password) {
   return function (dispatch) {
+    const github = client(username, password, 0);
     return (
-      githubContentZero.watchRepo({repoFullName})
+      github.watchRepo({repoFullName})
         .then(() => {
           dispatch(watchRepoSuccess(repoFullName));
         }

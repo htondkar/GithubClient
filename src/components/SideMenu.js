@@ -3,14 +3,12 @@ import {Link} from 'react-router';
 import logo from '../../public/gitlogo.png'
 
 export default class SideMenu extends React.Component {
-  constructor(){
-    super();
-    this.handleSearch = this.handleSearch.bind(this);
-  }
 
-  handleSearch(event){
+  handleSearch = (event) => {
     event.preventDefault();
-    this.props.search(this.refs.search.value);
+    const username = this.props.username;
+    const password = this.props.password;
+    this.props.search(this.refs.search.value, username, password);
   }
 
   render() {

@@ -1,2 +1,2 @@
 
-export const token = 'your token goes here';
+export const token = '';

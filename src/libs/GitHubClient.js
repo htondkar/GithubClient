@@ -14,10 +14,17 @@ class HttpException extends Error {
   }
 }
 
+// basic = new Buffer(this.auth.username + ":" + this.auth.password, "ascii").toString("base64");
+                    // headers["Authorization"] = "Basic " + basic;
 class GitHubClient {
-  constructor({baseUri, token, ContentType = "application/json"}, ...features) {
+  constructor({baseUri, token, ContentType = "application/json", username, password}, ...features) {
     this.baseUri = baseUri;
-    this.credentials = token !== null && token.length > 0 ? "token" + ' ' + token : null;
+    if ((username && password) && username.length !== 0 && password.length !== 0) {
+      const basic = new Buffer(username + ":" + password, "ascii").toString("base64")
+      this.credentials = `basic ${basic}`;
+    } else {
+      this.credentials = token !== null && token.length > 0 ? "token" + ' ' + token : null;
+    }
     this.headers = {
       "Content-Type": ContentType,
       "Accept": "application/vnd.github.v3.full+json",
@@ -77,3 +84,41 @@ class GitHubClient {
 }
 
 export default GitHubClient;
+
+
+// Set an authentication method to have access to protected resources.
+//      *
+//      *  ##### Example
+//      *
+//      *      // basic
+//      *      github.authenticate({
+//      *          type: "basic",
+//      *          username: "mikedeboertest",
+//      *          password: "test1324"
+//      *      });
+//      *
+//      *      // oauth
+//      *      github.authenticate({
+//      *          type: "oauth",
+//      *          token: "e5a4a27487c26e571892846366de023349321a73"
+//      *      });
+//      *
+//      *      // oauth key/secret
+//      *      github.authenticate({
+//      *          type: "oauth",
+//      *          key: "clientID",
+//      *          secret: "clientSecret"
+//      *      });
+//      *
+//      *      // user token
+//      *      github.authenticate({
+//      *          type: "token",
+//      *          token: "userToken",
+//      *      });
+//      *
+//      *      // integration (jwt)
+//      *      github.authenticate({
+//      *          type: "integration",
+//      *          token: "jwt",
+//      *      });
+//      **/

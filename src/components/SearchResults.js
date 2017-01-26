@@ -13,10 +13,15 @@ class SearchResults extends React.Component {
     let results = this.props.searchResults || []
     return (
       <div className="dashboard-wrapper">
-        <SideMenu username={this.props.username} search={this.props.actions.search}/>
+        <SideMenu
+          username={this.props.username}
+          password={this.props.password}
+          search={this.props.actions.search}/>
         <div className="dashboard">
           <ul className="list-group">
             {results.map((repo)=><Repo
+              username={this.props.username}
+              password={this.props.password}
               key={repo.full_name}
               repo={repo}
               fetchRepoForks={this.props.actions.fetchRepoForks}
@@ -45,6 +50,7 @@ function mapStateToProps(state) {
   return {
     searchResults: state.search.searchResults,
     username: state.user.username,
+    password: state.user.password,
     forksList: state.forks,
     issuesList: state.issues,
     forkedRepos: state.forks.forkedRepos,

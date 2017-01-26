@@ -11,23 +11,16 @@ class LogIn extends React.Component {
     this.state = {
       ajaxCallInProgress: false
     }
-    this.logInHandler = this.logInHandler.bind(this);
   }
 
-  logInHandler(event) {
+  logInHandler = (event) => {
     event.preventDefault();
     this.setState({ajaxCallInProgress: true})
     const username = this.refs.username.value;
     const password = this.refs.password.value;
     this.props.actions.logIn(username, password);
-    
-  }
 
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.ajaxCallInProgress) {
-  //     $('#sign-in').toggleClass('active');
-  //   }
-  // }
+  }
 
   render() {
     return (

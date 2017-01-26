@@ -12,11 +12,16 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div className="dashboard-wrapper">
-        <SideMenu username={this.props.username} search={this.props.actions.search}/>
+        <SideMenu
+          username={this.props.username}
+          password={this.props.password}
+          search={this.props.actions.search}/>
         <div className="dashboard">
           <ul className="list-group">
             {this.props.userRepos
               .map((repo)=><Repo
+                username={this.props.username}
+                password={this.props.password}
                 key={repo.name}
                 repo={repo}
                 fetchRepoForks={this.props.actions.fetchRepoForks}
@@ -44,6 +49,7 @@ function mapStateToProps(state) {
   return {
     userRepos: state.user.userRepos,
     username: state.user.username,
+    password: state.user.password,
     forksList: state.forks,
     issuesList: state.issues,
     forkedRepos: state.forks.forkedRepos,
